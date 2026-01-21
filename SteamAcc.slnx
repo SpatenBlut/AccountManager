@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SteamAcc/SteamAcc.vcxproj" Id="63cbfe5f-0232-43dd-80f0-8dc0c24ec0b6" />
+</Solution>
