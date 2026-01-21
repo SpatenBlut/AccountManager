@@ -13,16 +13,16 @@ void DeleteFirstLine() {
     std::ifstream MyReadFile("SteamAcc.txt");
 
     while (getline(MyReadFile, SteamAcc)) {
-		Accounts.push_back(SteamAcc); // store each line in vector
+        Accounts.push_back(SteamAcc); // store each line in vector
     }
     MyReadFile.close();
 
-	std::ofstream("SteamAcc.txt"); // clear file content
+    std::ofstream("SteamAcc.txt"); // clear file content
 
-	for (int i = 1; i < Accounts.size(); i++) {
+    for (int i = 1; i < Accounts.size(); i++) {
 
         std::ofstream MyFile("SteamAcc.txt", std::ios::app); // open file without deleting content
-		MyFile << Accounts[i] << std::endl; // write line to file
+        MyFile << Accounts[i] << std::endl; // write line to file
 
         MyFile.close();
 
@@ -52,26 +52,26 @@ std::string ReadFromFile() {
 
 int main() {
 
-	bool loop = true;
+    bool loop = true;
     bool inputValid = true;
     std::string input;
-	std::string cmd;
+    std::string cmd;
 
-    while (loop = true) {    
+    while (loop = true) {
 
         system("cls");
-		std::cout << "---Steam Account Manager---" << std::endl;
-		std::cout << "Commands: add, read, delete, exit" << std::endl;
+        std::cout << "---Steam Account Manager---" << std::endl;
+        std::cout << "Commands: add, read, delete, exit" << std::endl;
 
-		std::cin >> cmd;
-		std::cin.ignore(); // to ignore the newline character after cmd input
+        std::cin >> cmd;
+        std::cin.ignore(); // to ignore the newline character after cmd input
         system("cls");
 
         if (cmd == "add") {
 
             while (inputValid = true) {
 
-                std::cout << "q for exiting:\n";              
+                std::cout << "q for exiting:\n";
 
                 std::getline(std::cin, input);
                 system("cls");
@@ -80,7 +80,7 @@ int main() {
                     break;
                 }
                 else {
-					WriteToFile(input);
+                    WriteToFile(input);
                 }
             }
 
@@ -90,7 +90,7 @@ int main() {
         if (cmd == "read") {
 
             ReadFromFile();
-			std::cin.get();
+            std::cin.get();
 
             continue;
             system("cls");
@@ -99,8 +99,8 @@ int main() {
         if (cmd == "delete") { // todo: choose line to delete
 
             std::cout << "First Account got deleted\n";
-			DeleteFirstLine();
-			std::cin.get();
+            DeleteFirstLine();
+            std::cin.get();
 
             continue;
             system("cls");
@@ -113,7 +113,7 @@ int main() {
         else {
             std::cout << "Invalid command\n";
             continue;
-		}        
+        }
     }
 
     return 0;
