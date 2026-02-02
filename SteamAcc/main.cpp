@@ -3,52 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <windows.h>
-
-std::vector<std::string> Accounts;
-
-void DeleteFirstLine() {
-
-    std::string SteamAcc;
-
-    std::ifstream MyReadFile("SteamAcc.txt");
-
-    while (getline(MyReadFile, SteamAcc)) {
-        Accounts.push_back(SteamAcc); // store each line in vector
-    }
-    MyReadFile.close();
-
-    std::ofstream("SteamAcc.txt"); // clear file content
-
-    for (int i = 1; i < Accounts.size(); i++) {
-
-        std::ofstream MyFile("SteamAcc.txt", std::ios::app); // open file without deleting content
-        MyFile << Accounts[i] << std::endl; // write line to file
-
-        MyFile.close();
-
-    }
-}
-
-void WriteToFile(std::string write) {
-    std::ofstream MyFile("SteamAcc.txt", std::ios::app);
-    MyFile << write << std::endl;
-    MyFile.close();
-}
-
-std::string ReadFromFile() {
-
-    std::string SteamAcc;
-
-    // Read from the text file
-    std::ifstream MyReadFile("SteamAcc.txt");
-
-    while (getline(MyReadFile, SteamAcc)) {
-        std::cout << SteamAcc << std::endl;
-    }
-
-    // Close the file
-    MyReadFile.close();
-}
+#include "FileManage.h"
 
 int main() {
 
@@ -96,10 +51,17 @@ int main() {
             system("cls");
         }
 
-        if (cmd == "delete") { // todo: choose line to delete
+        if (cmd == "delete") {
 
-            std::cout << "First Account got deleted\n";
-            DeleteFirstLine();
+
+            ReadFromFile();
+
+            int lineToDelete;
+            std::cout << "select line to delete\n";
+            std::cin >> lineToDelete;
+
+            lineToDelete -= 1; // match vector index
+            DeleteFirstLine(lineToDelete);
             std::cin.get();
 
             continue;
