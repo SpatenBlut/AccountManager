@@ -1,5 +1,11 @@
 #pragma once
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
 
-void DeleteFirstLine(int lineToDelete);
+extern std::vector<std::string> Accounts;
+
+void DeleteLine(int lineToDelete);
 void WriteToFile(std::string write);
 void ReadFromFile();

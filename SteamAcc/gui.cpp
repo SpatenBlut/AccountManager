@@ -62,6 +62,7 @@ void gui() {
 
     setup();
 
+    ReadFromFile();
     MSG msg = {};
     while (msg.message != WM_QUIT) {
 
@@ -78,11 +79,20 @@ void gui() {
         ImGui::Begin("Account Manager", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
         static bool AddCheck = false;
+        static char inputBuf[1024] = "";
 
-		if (AddCheck == true) {
-            static char inputBuf[1024] = "";
+        if (AddCheck == true) {
             ImGui::InputTextMultiline("##input", inputBuf, sizeof(inputBuf), ImVec2(883, 500));
             if (ImGui::Button("Done")) {
+                // write each line to file
+                std::string text(inputBuf);
+                std::stringstream ss(text);
+                std::string line;
+                while (getline(ss, line)) {
+                    if (!line.empty())
+                        WriteToFile(line);
+                }
+                memset(inputBuf, 0, sizeof(inputBuf));
                 AddCheck = false;
             }
         }
@@ -91,15 +101,30 @@ void gui() {
             static bool myCheckbox = false;
             static bool myButton = false;
 
-            ImGui::SetNextItemWidth(750.0f);
-            static char myText[256] = "";
-            ImGui::InputText("##text", myText, sizeof(myText), ImGuiInputTextFlags_ReadOnly);
+            for (int i = 0; i < Accounts.size(); i++) { 
 
-            ImGui::SameLine();
-            ImGui::Button("Using");
+                ImGui::PushID(i);
 
-            ImGui::SameLine();
-            ImGui::Button("Delete");
+                ImGui::SetNextItemWidth(750.0f);
+                char myText[256];
+
+                // strcpy converts Accounts vector to myText char
+                strcpy_s(myText, Accounts[i].c_str()); // c_str converts the string to const char*                
+                ImGui::InputText("##text", myText, sizeof(myText), ImGuiInputTextFlags_ReadOnly);
+                
+                ImGui::SameLine();
+                if (ImGui::Button("Using")) {
+
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("Delete")) {
+
+                }
+                ImGui::PopID();
+            }
+
+            
 
             ImGui::SetCursorPos(ImVec2(10, 565));
             if (ImGui::Button("Add Account")) {
