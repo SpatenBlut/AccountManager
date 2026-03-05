@@ -15,5 +15,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, INT) {
 
 	gui();
 
+	/*
+	TODO:
+	vector<string> zu vector<Account> ändern mit struct
+	*/
+
     return 0;
 }

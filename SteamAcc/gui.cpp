@@ -61,8 +61,8 @@ void setup() {
 void gui() {
 
     setup();
-
     ReadFromFile();
+
     MSG msg = {};
     while (msg.message != WM_QUIT) {
 
@@ -71,10 +71,10 @@ void gui() {
         }
 
         ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();        
-
+        ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
+        ImGui::SetNextWindowPos(ImVec2(960, 540), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
         ImGui::SetNextWindowSize(ImVec2(900, 600));
         ImGui::Begin("Account Manager", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
@@ -92,47 +92,73 @@ void gui() {
                     if (!line.empty())
                         WriteToFile(line);
                 }
+                ReadFromFile();
                 memset(inputBuf, 0, sizeof(inputBuf));
                 AddCheck = false;
             }
         }
-        else
-        {
-            static bool myCheckbox = false;
-            static bool myButton = false;
+        else {
 
-            for (int i = 0; i < Accounts.size(); i++) { 
+            static int deleteIndex = -1;
+            static bool showDeleteWindow = false;
 
+            for (int i = 0; i < Accounts.size(); i++) {
                 ImGui::PushID(i);
 
                 ImGui::SetNextItemWidth(750.0f);
                 char myText[256];
 
                 // strcpy converts Accounts vector to myText char
-                strcpy_s(myText, Accounts[i].c_str()); // c_str converts the string to const char*                
+                strcpy_s(myText, Accounts[i].data.c_str()); // c_str converts the string to const char*
+
+                if (Accounts[i].status == "using") {
+                    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.8f, 0.6f, 0.0f, 1.0f));
+                }
+                else {
+                    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.16f, 0.29f, 0.48f, 0.54f));
+                }
                 ImGui::InputText("##text", myText, sizeof(myText), ImGuiInputTextFlags_ReadOnly);
-                
+                ImGui::PopStyleColor();
+
                 ImGui::SameLine();
                 if (ImGui::Button("Using")) {
-
+                    UpdateStatus(i, "using");
                 }
 
                 ImGui::SameLine();
                 if (ImGui::Button("Delete")) {
-
+                    deleteIndex = i;
+                    showDeleteWindow = true;
                 }
                 ImGui::PopID();
             }
 
-            
+            if (showDeleteWindow) {
+                ImGui::SetNextWindowFocus();
+                ImGui::SetNextWindowPos(ImVec2(960, 540), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+                ImGui::SetNextWindowSize(ImVec2(300, 100));
+                ImGui::Begin("Confirm", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoFocusOnAppearing);
+                ImGui::Text("Do you really want to delete this account?");
+                ImGui::Spacing();
+                if (ImGui::Button("Yes")) {
+                    DeleteLine(deleteIndex);
+                    ReadFromFile();
+                    showDeleteWindow = false;
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("No")) {
+                    showDeleteWindow = false;
+                }
+                ImGui::End();
+            }
 
             ImGui::SetCursorPos(ImVec2(10, 565));
             if (ImGui::Button("Add Account")) {
                 AddCheck = true;
             }
-        }        
+        }
 
-		ImGui::End();
+        ImGui::End();
 
         ImGui::Render();
         const float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
